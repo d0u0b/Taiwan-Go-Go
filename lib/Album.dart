@@ -7,7 +7,7 @@ import 'package:like_button/like_button.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 
 Future<List<View>> futureViewList = fetchView();
-
+bool futureDone = false;
 
 class Album extends StatefulWidget {
   @override
@@ -15,57 +15,62 @@ class Album extends StatefulWidget {
 }
 
 class _AlbumState extends State<Album> {
-int percent = 0;
+  int percent = 0;
 
   @override
   void initState() {
-    Timer timer;
-    timer = Timer.periodic(Duration(milliseconds: 25), (_) {
-      // print('Percent Update');
-      setState(() {
-        percent += 1;
-        if (percent >= 100) {
+    super.initState();
+    if (!futureDone) {
+      Timer timer;
+      timer = Timer.periodic(Duration(milliseconds: 25), (_) {
+        // print('Percent Update');
+        setState(() {
+          percent += 1;
+        });
+        if (percent >= 100 || futureDone) {
           timer.cancel();
           // percent=0;
         }
       });
-    });
-    super.initState();
+      futureViewList.then((value) {
+        futureDone = true;
+      }); 
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top:10,left:1,right:1),
+      padding: EdgeInsets.only(top: 10, left: 1, right: 1),
       child: FutureBuilder<List<View>>(
         future: futureViewList,
         builder: (context, snapshot) {
           // print(snapshot.hasData);
           if (snapshot.hasData) {
             // print(snapshot.data);
-            
+
             return GridView.builder(
-              
-              itemCount:snapshot.data.length,
+              itemCount: snapshot.data.length,
               padding: EdgeInsets.all(2),
-              gridDelegate:
-                  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,crossAxisSpacing:2,mainAxisSpacing:3),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2, crossAxisSpacing: 2, mainAxisSpacing: 3),
               itemBuilder: (context, index) {
                 if (snapshot.data[index].Picture1 == '') {
-                    snapshot.data[index].Picture1 =
-                        'https://www.energy-bagua.com/topic/wp-content/uploads/sites/8/2020/10/no-image.png';
-                  }
+                  snapshot.data[index].Picture1 =
+                      'https://www.energy-bagua.com/topic/wp-content/uploads/sites/8/2020/10/no-image.png';
+                }
 
                 Future<bool> onLikeButtonTapped(bool isLiked) async {
-                    // print(isLiked);
-                    final snackBar = new SnackBar(
+                  // print(isLiked);
+                  final snackBar = new SnackBar(
                       duration: Duration(seconds: 2),
-                        content:
-                            new Text(isLiked?'已將 ${snapshot.data[index].Name} 從收藏中移除：（':'已將 ${snapshot.data[index].Name} 加到收藏中：）'));
-                    Scaffold.of(context).showSnackBar(snackBar);
+                      content: new Text(isLiked
+                          ? '已將 ${snapshot.data[index].Name} 從收藏中移除：（'
+                          : '已將 ${snapshot.data[index].Name} 加到收藏中：）'));
+                  Scaffold.of(context).showSnackBar(snackBar);
 
-                    return !isLiked;
-                  }
+                  return !isLiked;
+                }
 
                 return Stack(
                   fit: StackFit.expand,
@@ -90,25 +95,31 @@ int percent = 0;
                                   Text(snapshot.data[index].Name,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(color: Colors.white,fontSize: 16)),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text('${snapshot.data[index].Region} ${snapshot.data[index].Town}',
-                                      style: TextStyle(color: Colors.white, fontSize: 12)),
-                                  LikeButton(
-                                    onTap: onLikeButtonTapped,
-                                    likeBuilder: (bool isLiked) {
-                                    return Icon(
-                                      Icons.favorite,
-                                      color:
-                                          isLiked ? Colors.pink : Colors.grey[400],
-                                      size: 30,
-                                    );
-                                  },
-                                  ),
-                                ],
-                              )
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 16)),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                          '${snapshot.data[index].Region} ${snapshot.data[index].Town}',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 12)),
+                                      LikeButton(
+                                        onTap: onLikeButtonTapped,
+                                        likeBuilder: (bool isLiked) {
+                                          return Icon(
+                                            Icons.favorite,
+                                            color: isLiked
+                                                ? Colors.pink
+                                                : Colors.grey[400],
+                                            size: 30,
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  )
                                 ],
                               ),
                             ),
@@ -119,7 +130,7 @@ int percent = 0;
                   ],
                 );
               },
-            );          
+            );
           }
           return Center(
             child: Container(
@@ -139,7 +150,7 @@ int percent = 0;
                   percent.toString() + "%",
                   style: TextStyle(fontSize: 20, color: Colors.blue[900]),
                 ),
-),
+              ),
             ),
           );
         },

@@ -9,6 +9,7 @@ import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:share/share.dart';
 
 Future<List<View>> futureViewList = fetchView();
+bool futureDone = false;
 
 class HomePage extends StatefulWidget {
   @override
@@ -22,20 +23,22 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    // futureViewList = fetchView();
-
-    Timer timer;
-    timer = Timer.periodic(Duration(milliseconds: 25), (_) {
-      // print('Percent Update');
-      setState(() {
-        percent += 1;
-        if (percent >= 100) {
+    if (!futureDone) {
+      Timer timer;
+      timer = Timer.periodic(Duration(milliseconds: 25), (_) {
+        // print('Percent Update');
+        setState(() {
+          percent += 1;
+        });
+        if (percent >= 100 || futureDone) {
           timer.cancel();
           // percent=0;
         }
       });
-    });
-    super.initState();
+      futureViewList.then((value) {
+        futureDone = true;
+      }); 
+    }
   }
 
   @override
