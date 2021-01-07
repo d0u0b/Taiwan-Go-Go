@@ -51,6 +51,9 @@ class Auth implements BaseAuth {
   }
 
   Future<void> signOut() async {
-    await googleSignIn.signOut();
+    return Future.wait([
+      _auth.signOut(),
+      googleSignIn.signOut()
+    ]);
   }
 }

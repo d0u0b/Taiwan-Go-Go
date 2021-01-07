@@ -1,6 +1,6 @@
 import 'package:TaiwanGoGo/homeBody.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
+// import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:TaiwanGoGo/authentication.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
@@ -73,11 +73,7 @@ class Login extends StatelessWidget {
               onPressed: () {
                 _auth.signInWithGoogle().then((result) {
                   if (result != null) {
-                    Alert(
-                      context: context,
-                      title: "登入成功",
-                      type: AlertType.success,
-                    ).show();
+                    this.flush();
                   }
                 });
               },
@@ -158,7 +154,9 @@ class Home extends StatelessWidget {
                 style: TextStyle(fontSize: 18),
               ),
               onTap: () {
-                _auth.signOut().then(flush);
+                _auth.signOut().then((result) {
+                  this.flush();
+                });
               },
             ),
           ],
