@@ -40,6 +40,7 @@ dependencies:
   cloud_firestore: ^0.14.4
   google_sign_in: ^4.5.3
   rflutter_alert: ^1.1.0
+  flappy_search_bar: 1.4.1
 
 dev_dependencies:
   flutter_test:

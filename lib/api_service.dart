@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:TaiwanGoGo/View.dart';
 import 'package:http/http.dart' as http;
 
-Future<List<View>> fetchView() async {
+Future<List<View>> fetchView({String search}) async {
   final response = await http.get(
       'https://gis.taiwan.net.tw/XMLReleaseALL_public/scenic_spot_C_f.json');
 
@@ -17,9 +17,12 @@ Future<List<View>> fetchView() async {
     List<dynamic> viewsInJson = res['XML_Head']['Infos']['Info'];
     viewsInJson.forEach((view) {
       // print(view['Name']);
-      views.add(View.fromJson(view));
+      View _view = View.fromJson(view);
+      if(search == null || _view.Name.indexOf(search) != -1) {
+        views.add(_view);
+      }
     });
-    
+
     // print(views);
     return views;
   } else {

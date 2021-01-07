@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:TaiwanGoGo/View.dart';
+import 'package:TaiwanGoGo/ViewDetail.dart';
 import 'package:TaiwanGoGo/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:like_button/like_button.dart';
@@ -72,62 +73,71 @@ class _AlbumState extends State<Album> {
                   return !isLiked;
                 }
 
-                return Stack(
-                  fit: StackFit.expand,
-                  children: <Widget>[
-                    Image.network(
-                      snapshot.data[index].Picture1,
-                      fit: BoxFit.cover,
-                    ),
-                    Align(
-                      alignment: Alignment.bottomLeft,
-                      child: Container(
-                        padding: EdgeInsets.all(10.0),
-                        color: Colors.black38,
-                        child: Row(
-                          children: <Widget>[
-                            Flexible(
-                              fit: FlexFit.tight,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(snapshot.data[index].Name,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 16)),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                          '${snapshot.data[index].Region} ${snapshot.data[index].Town}',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 12)),
-                                      LikeButton(
-                                        onTap: onLikeButtonTapped,
-                                        likeBuilder: (bool isLiked) {
-                                          return Icon(
-                                            Icons.favorite,
-                                            color: isLiked
-                                                ? Colors.pink
-                                                : Colors.grey[400],
-                                            size: 30,
-                                          );
-                                        },
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
+                return InkWell(
+                  onTap: () => {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                ViewDetail(snapshot.data[index])))
+                  },
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: <Widget>[
+                      Image.network(
+                        snapshot.data[index].Picture1,
+                        fit: BoxFit.cover,
                       ),
-                    )
-                  ],
+                      Align(
+                        alignment: Alignment.bottomLeft,
+                        child: Container(
+                          padding: EdgeInsets.all(10.0),
+                          color: Colors.black38,
+                          child: Row(
+                            children: <Widget>[
+                              Flexible(
+                                fit: FlexFit.tight,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(snapshot.data[index].Name,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 16)),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                            '${snapshot.data[index].Region} ${snapshot.data[index].Town}',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 12)),
+                                        LikeButton(
+                                          onTap: onLikeButtonTapped,
+                                          likeBuilder: (bool isLiked) {
+                                            return Icon(
+                                              Icons.favorite,
+                                              color: isLiked
+                                                  ? Colors.pink
+                                                  : Colors.grey[400],
+                                              size: 30,
+                                            );
+                                          },
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 );
               },
             );

@@ -1,4 +1,3 @@
-import 'package:TaiwanGoGo/ViewCard.dart';
 import 'package:TaiwanGoGo/homeBody.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';

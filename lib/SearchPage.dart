@@ -1,38 +1,43 @@
-import 'package:getflutter/getflutter.dart';
+import 'package:TaiwanGoGo/View.dart';
+import 'package:flappy_search_bar/flappy_search_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:TaiwanGoGo/api_service.dart';
 
-class SearchPage extends StatefulWidget {
-  @override
-  _SearchPageState createState() => _SearchPageState();
+class Post {
+  final String title;
+  final String description;
+
+  Post(this.title, this.description);
 }
 
-List list = ["觀光工廠", "自行車道", ""];
+class SearchPage extends StatelessWidget {
+  List<View> searchResult;
+  Future<List<Post>> search(String search) async {
+    searchResult = await fetchView(search: search);
+    return List.generate(searchResult.length, (int index) {
+      return Post(
+        "景點 : ${searchResult[index].Name}",
+        "描述 :${searchResult[index].Descript}",
+      );
+    });
+  }
 
-class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: GFSearchBar(
-        searchList: list,
-        searchQueryBuilder: (query, list) {
-          return list
-              .where((item) => item.toLowerCase().contains(query.toLowerCase()))
-              .toList();
-        },
-        overlaySearchListItemBuilder: (item) {
-          return Container(
-            padding: const EdgeInsets.all(8),
-            child: Text(
-              "$item",
-              style: const TextStyle(fontSize: 18),
-            ),
-          );
-        },
-        onItemSelected: (item) {
-          setState(() {
-            // print('$item');
-          });
-        },
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: SearchBar<Post>(
+            onSearch: search,
+            onItemFound: (Post post, int index) {
+              return ListTile(
+                title: Text(post.title),
+                subtitle: Text(post.description),
+              );
+            },
+          ),
+        ),
       ),
     );
   }
