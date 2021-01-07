@@ -8,6 +8,7 @@ import 'package:like_button/like_button.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 
 Future<List<View>> futureViewList = fetchView();
+bool futureDone = false;
 
 class Album extends StatefulWidget {
   @override
@@ -19,18 +20,23 @@ class _AlbumState extends State<Album> {
 
   @override
   void initState() {
-    Timer timer;
-    timer = Timer.periodic(Duration(milliseconds: 25), (_) {
-      // print('Percent Update');
-      setState(() {
-        percent += 1;
-        if (percent >= 100) {
+    super.initState();
+    if (!futureDone) {
+      Timer timer;
+      timer = Timer.periodic(Duration(milliseconds: 25), (_) {
+        // print('Percent Update');
+        setState(() {
+          percent += 1;
+        });
+        if (percent >= 100 || futureDone) {
           timer.cancel();
           // percent=0;
         }
       });
-    });
-    super.initState();
+      futureViewList.then((value) {
+        futureDone = true;
+      }); 
+    }
   }
 
   @override

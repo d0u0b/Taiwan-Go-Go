@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "296258975341",
+    "project_id": "taiwangogo-75be3",
+    "storage_bucket": "taiwangogo-75be3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:296258975341:android:70bc62cbceeed83d693164",
+        "android_client_info": {
+          "package_name": "d0u0b.TaiwanGoGo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "296258975341-0is4vsf49ffcfv2u2gue348n1b85i3nj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApgTdlzplblhtWc1Uj0al2Hj3NVupDRhw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "296258975341-0is4vsf49ffcfv2u2gue348n1b85i3nj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
