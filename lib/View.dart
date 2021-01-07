@@ -67,6 +67,19 @@ class View {
     Zipcode = int.tryParse(json['Zipcode']);
     // ClassType2 = int.tryParse(json['Class2']);
 
+    if (Ticketinfo == '' || Ticketinfo == null) {
+      Ticketinfo = '無票價資訊';
+    }
+
+    if (Website == '' || Website == null) {
+      Website = '無網站連結';
+    }
+
+    if (Picture1 == '') {
+      Picture1 =
+          'https://www.energy-bagua.com/topic/wp-content/uploads/sites/8/2020/10/no-image.png';
+    }
+
     if (ClassType1 == null || ClassType1 > 18) {
       ClassType1 = 18;
     }

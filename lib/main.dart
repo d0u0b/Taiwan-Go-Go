@@ -1,7 +1,5 @@
-import 'package:TaiwanGoGo/ViewCard.dart';
 import 'package:TaiwanGoGo/homeBody.dart';
 import 'package:flutter/material.dart';
-
 
 void main() {
   runApp(MyApp());
@@ -29,7 +27,8 @@ class MyApp extends StatelessWidget {
           child: ListView(
             children: <Widget>[
               UserAccountsDrawerHeader(
-                accountEmail: Text(''), // keep blank text because email is required
+                accountEmail:
+                    Text(''), // keep blank text because email is required
                 accountName: Row(
                   children: <Widget>[
                     Container(
@@ -75,4 +74,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

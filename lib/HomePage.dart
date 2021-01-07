@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:TaiwanGoGo/ViewDetail.dart';
 import 'package:flutter/material.dart';
 import 'package:TaiwanGoGo/View.dart';
 import 'package:TaiwanGoGo/api_service.dart';
 import 'package:like_button/like_button.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:share/share.dart';
+import 'ViewDetail.dart';
 
 Future<List<View>> futureViewList = fetchView();
 
@@ -16,7 +18,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  
   int percent = 0;
 
   @override
@@ -51,17 +52,13 @@ class _HomePageState extends State<HomePage> {
             return ListView.builder(
                 itemCount: snapshot.data.length,
                 itemBuilder: (context, index) {
-                  if (snapshot.data[index].Picture1 == '') {
-                    snapshot.data[index].Picture1 =
-                        'https://www.energy-bagua.com/topic/wp-content/uploads/sites/8/2020/10/no-image.png';
-                  }
-
                   Future<bool> onLikeButtonTapped(bool isLiked) async {
                     // print(isLiked);
                     final snackBar = new SnackBar(
-                      duration: Duration(seconds: 2),
-                        content:
-                            new Text(isLiked?'已將 ${snapshot.data[index].Name} 從收藏中移除：（':'已將 ${snapshot.data[index].Name} 加到收藏中：）'));
+                        duration: Duration(seconds: 2),
+                        content: new Text(isLiked
+                            ? '已將 ${snapshot.data[index].Name} 從收藏中移除：（'
+                            : '已將 ${snapshot.data[index].Name} 加到收藏中：）'));
                     Scaffold.of(context).showSnackBar(snackBar);
 
                     return !isLiked;
@@ -105,6 +102,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                         ),
+                        
                         ButtonBar(
                           alignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -163,7 +161,11 @@ class _HomePageState extends State<HomePage> {
                                 FlatButton(
                                   textColor: Colors.blue,
                                   onPressed: () {
-                                    // print("查看更多");
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => ViewDetail(
+                                                snapshot.data[index])));
                                   },
                                   child: Icon(Icons.open_in_new, size: 26),
                                 )
