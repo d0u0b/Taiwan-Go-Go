@@ -18,7 +18,7 @@ Future<List<View>> fetchView({String search}) async {
     viewsInJson.forEach((view) {
       // print(view['Name']);
       View _view = View.fromJson(view);
-      if(search == null || _view.Name.indexOf(search) != -1) {
+      if (search == null || _view.Name.indexOf(search) != -1 ||  _view.Region.indexOf(search) != -1 ||  _view.Town.indexOf(search) != -1) {
         views.add(_view);
       }
     });
