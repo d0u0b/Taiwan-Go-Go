@@ -35,7 +35,7 @@ class _AlbumState extends State<Album> {
       });
       futureViewList.then((value) {
         futureDone = true;
-      }); 
+      });
     }
   }
 

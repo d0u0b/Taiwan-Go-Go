@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
       });
       futureViewList.then((value) {
         futureDone = true;
-      }); 
+      });
     }
   }
 
@@ -105,7 +105,6 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                         ),
-                        
                         ButtonBar(
                           alignment: MainAxisAlignment.spaceBetween,
                           children: [

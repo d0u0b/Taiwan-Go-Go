@@ -168,14 +168,10 @@ class ViewDetail extends StatelessWidget {
                           )),
                     ],
                   ),
-                  
                 ],
               ),
             ),
-            
           ],
-          
-        )
-    );
+        ));
   }
 }
