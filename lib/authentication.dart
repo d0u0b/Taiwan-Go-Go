@@ -46,7 +46,7 @@ class Auth implements BaseAuth {
     return null;
   }
 
-  dynamic getCurrentUser() {
+  User getCurrentUser() {
     return _auth.currentUser;
   }
 

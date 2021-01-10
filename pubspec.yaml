@@ -41,6 +41,8 @@ dependencies:
   google_sign_in: ^4.5.3
   rflutter_alert: ^1.1.0
   flappy_search_bar: 1.4.1
+  pull_to_refresh: ^1.6.3
+
 
 dev_dependencies:
   flutter_test:

@@ -1,4 +1,6 @@
 import 'package:TaiwanGoGo/homeBody.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 // import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:TaiwanGoGo/authentication.dart';
@@ -19,7 +21,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  dynamic _user = _auth.getCurrentUser();
+  User _user = _auth.getCurrentUser();
 
   void flushPage() {
     setState(() {
@@ -39,12 +41,6 @@ class _MyAppState extends State<MyApp> {
             : Login(
                 flush: flushPage,
               ));
-    // if(this._user != null) {
-    //   return Home(flush: flushPage,);
-    // }
-    // else {
-    //   return Login(flush: flushPage,);
-    // }
   }
 }
 
@@ -91,6 +87,7 @@ class Home extends StatelessWidget {
   Home({this.flush}) : super();
   @override
   Widget build(BuildContext context) {
+    User _user = _auth.getCurrentUser();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue[200],
@@ -117,15 +114,14 @@ class Home extends StatelessWidget {
                     height: 80,
                     decoration: BoxDecoration(shape: BoxShape.circle),
                     child: CircleAvatar(
-                      backgroundImage: NetworkImage(
-                          "https://avatars3.githubusercontent.com/u/40608845?s=460&v=4"),
+                      backgroundImage: NetworkImage(_user.photoURL),
                     ),
                   ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        '未登入的遊客',
+                        _user.displayName,
                         style: TextStyle(fontSize: 20),
                       ),
                     ],
