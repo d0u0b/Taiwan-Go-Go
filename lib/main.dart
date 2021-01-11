@@ -1,3 +1,4 @@
+import 'package:TaiwanGoGo/firestore.dart';
 import 'package:TaiwanGoGo/homeBody.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -151,6 +152,7 @@ class Home extends StatelessWidget {
               ),
               onTap: () {
                 _auth.signOut().then((result) {
+                  profile = null;
                   this.flush();
                 });
               },
@@ -158,7 +160,16 @@ class Home extends StatelessWidget {
           ],
         ),
       ),
-      body: HomeBody(),
+      body: FutureBuilder(
+        future: Profile.getProfile(),
+        builder: (context, snapshot) {
+          if(snapshot.hasData) {
+            return HomeBody();
+          } else {
+            return Container();
+          }
+        },
+      ),
     );
   }
 }

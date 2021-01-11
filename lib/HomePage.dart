@@ -1,23 +1,19 @@
 import 'dart:async';
 
-import 'package:TaiwanGoGo/ViewDetail.dart';
+import 'package:TaiwanGoGo/FavoritePage.dart';
 import 'package:TaiwanGoGo/firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:TaiwanGoGo/View.dart';
-import 'package:TaiwanGoGo/api_service.dart';
 import 'package:TaiwanGoGo/viewcard.dart';
-import 'package:like_button/like_button.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:share/share.dart';
-import 'ViewDetail.dart';
 
-Future<List<View>> futureViewList = fetchView();
-bool futureDone = false;
 final MyStream _post = Post.getStream();
 
-RefreshController _refreshController = RefreshController(initialRefresh: true);
+Future<List<QueryDocumentSnapshot>> loading = _post.getData();
+
+RefreshController _refreshController = RefreshController(initialRefresh: false);
 
 class HomePage extends StatefulWidget {
   @override
@@ -27,7 +23,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   void _onRefresh() async {
     _post.refresh();
-    if(profile == null) profile = await Profile.getProfile();
+    if (profile == null) profile = await Profile.getProfile();
     await _post.getData();
     if (mounted) setState(() {});
     _refreshController.refreshCompleted();
@@ -43,42 +39,98 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return SmartRefresher(
-      enablePullDown: true,
-      enablePullUp: true,
-      controller: _refreshController,
-      header: WaterDropMaterialHeader(),
-      footer: CustomFooter(
-        builder: (BuildContext context, LoadStatus mode) {
-          Widget body;
-          if (mode == LoadStatus.idle) {
-            body = Text("pull up load");
-          } else if (mode == LoadStatus.loading) {
-            body = CupertinoActivityIndicator();
-          } else if (mode == LoadStatus.failed) {
-            body = Text("Load Failed!Click retry!");
-          } else if (mode == LoadStatus.canLoading) {
-            body = Text("release to load more");
+    return FutureBuilder(
+        future: loading,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return SmartRefresher(
+              enablePullDown: true,
+              enablePullUp: true,
+              controller: _refreshController,
+              header: WaterDropMaterialHeader(),
+              footer: CustomFooter(
+                builder: (BuildContext context, LoadStatus mode) {
+                  Widget body;
+                  if (mode == LoadStatus.idle) {
+                    body = Text("pull up load");
+                  } else if (mode == LoadStatus.loading) {
+                    body = CupertinoActivityIndicator();
+                  } else if (mode == LoadStatus.failed) {
+                    body = Text("Load Failed!Click retry!");
+                  } else if (mode == LoadStatus.canLoading) {
+                    body = Text("release to load more");
+                  } else {
+                    body = Text("No more Data");
+                  }
+                  return Container(
+                    height: 55.0,
+                    child: Center(child: body),
+                  );
+                },
+              ),
+              onRefresh: _onRefresh,
+              onLoading: _onLoading,
+              child: ListView.builder(
+                itemBuilder: (content, index) =>
+                    ViewCard(post: Post(_post.documents[index])),
+                itemCount: _post.documents.length,
+              ),
+            );
           } else {
-            body = Text("No more Data");
+            return Center(
+              child: ProgressBar(),
+            );
           }
-          return Container(
-            height: 55.0,
-            child: Center(child: body),
-          );
-        },
-      ),
-      onRefresh: _onRefresh,
-      onLoading: _onLoading,
-      child: ListView.builder(
-        itemBuilder: (content, index) => ViewCard(post: Post(_post.documents[index])),
-        itemCount: _post.documents.length,
+        });
+  }
+}
+
+class ProgressBar extends StatefulWidget {
+  @override
+  _ProgressBarState createState() => _ProgressBarState();
+}
+
+class _ProgressBarState extends State<ProgressBar> {
+  int percent = 0;
+  Timer timer;
+
+  @override
+  void initState() {
+    super.initState();
+    timer = Timer.periodic(Duration(microseconds: 650), (_) {
+      if (mounted) {
+        setState(() {
+          percent += 1;
+        });
+      }
+      if (percent >= 100) {
+        timer.cancel();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 200,
+      height: 200,
+      child: LiquidCircularProgressIndicator(
+        value: percent / 100, // Defaults to 0.5.
+        valueColor: AlwaysStoppedAnimation(
+            Colors.blue[200]), // Defaults to the current Theme's accentColor.
+        backgroundColor:
+            Colors.white, // Defaults to the current Theme's backgroundColor.
+        borderColor: Colors.blue[200],
+        borderWidth: 5.0,
+        direction: Axis.vertical,
+        center: Text(
+          percent.toString() + "%",
+          style: TextStyle(fontSize: 20, color: Colors.blue[900]),
+        ),
       ),
     );
   }
 }
-
-
 
 // class HomePage extends StatefulWidget {
 //   @override

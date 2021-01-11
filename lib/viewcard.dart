@@ -1,3 +1,4 @@
+import 'package:TaiwanGoGo/ViewDetail.dart';
 import 'package:TaiwanGoGo/firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:like_button/like_button.dart';
@@ -123,14 +124,13 @@ class ViewCardState extends State<ViewCard> {
                       child: Icon(Icons.share)),
                   FlatButton(
                     textColor: Colors.blue,
-                    onPressed: () {},
-                    // onPressed: () {
-                    //   Navigator.push(
-                    //       context,
-                    //       MaterialPageRoute(
-                    //           builder: (context) =>
-                    //               ViewDetail(widget.post)));
-                    // },
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  PostDetail(widget.post)));
+                    },
                     child: Icon(Icons.open_in_new, size: 26),
                   )
                 ],

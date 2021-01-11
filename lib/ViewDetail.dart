@@ -1,13 +1,11 @@
-import 'package:TaiwanGoGo/View.dart';
+import 'package:TaiwanGoGo/firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:like_button/like_button.dart';
 import 'package:share/share.dart';
-import 'View.dart';
 
-class ViewDetail extends StatelessWidget {
-  View view;
-  ViewDetail(this.view) : super();
-
+class PostDetail extends StatelessWidget {
+  final Post post;
+  PostDetail(this.post) : super();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,7 +14,7 @@ class ViewDetail extends StatelessWidget {
           toolbarHeight: 65,
           // centerTitle: true,
           title: Text(
-            this.view.Name,
+            post.name,
             style: TextStyle(
               color: Colors.white,
               fontSize: 24,
@@ -31,7 +29,7 @@ class ViewDetail extends StatelessWidget {
               clipBehavior: Clip.antiAlias,
               child: Column(
                 children: [
-                  Image.network(view.Picture1),
+                  Image.network(post.picture1),
                   ListTile(
                     leading: Icon(
                       Icons.location_on,
@@ -39,11 +37,11 @@ class ViewDetail extends StatelessWidget {
                       size: 30,
                     ),
                     title: Text(
-                      view.Name,
+                      post.name,
                       style: TextStyle(fontSize: 16),
                     ),
                     subtitle: Text(
-                      '${view.Region} ${view.Town}',
+                      '${post.region} ${post.town}',
                       style: TextStyle(
                           fontSize: 14, color: Colors.black.withOpacity(0.6)),
                     ),
@@ -55,7 +53,7 @@ class ViewDetail extends StatelessWidget {
                       size: 30,
                     ),
                     title: Text(
-                      view.Add,
+                      post.add,
                       style: TextStyle(fontSize: 16),
                     ),
                   ),
@@ -66,7 +64,7 @@ class ViewDetail extends StatelessWidget {
                       size: 30,
                     ),
                     title: Text(
-                      view.Tel,
+                      post.tel,
                       style: TextStyle(fontSize: 16),
                     ),
                   ),
@@ -77,7 +75,7 @@ class ViewDetail extends StatelessWidget {
                       size: 30,
                     ),
                     title: Text(
-                      view.Ticketinfo,
+                      post.ticketinfo,
                       style: TextStyle(fontSize: 16),
                     ),
                   ),
@@ -88,7 +86,7 @@ class ViewDetail extends StatelessWidget {
                       size: 30,
                     ),
                     title: Text(
-                      view.Website,
+                      post.website,
                       style: TextStyle(fontSize: 16),
                     ),
                   ),
@@ -99,7 +97,7 @@ class ViewDetail extends StatelessWidget {
                       size: 30,
                     ),
                     title: Text(
-                      view.ClassTypeText1,
+                      post.classTypeText1,
                       style: TextStyle(fontSize: 16),
                     ),
                   ),
@@ -107,7 +105,7 @@ class ViewDetail extends StatelessWidget {
                     padding: EdgeInsets.only(
                         top: 20, left: 10, right: 10, bottom: 20),
                     child: Text(
-                      '${view.Descript}',
+                      '${post.descript}',
                       style: TextStyle(
                         fontSize: 16,
                         letterSpacing: 1.05,
@@ -129,7 +127,9 @@ class ViewDetail extends StatelessWidget {
                         children: [
                           FlatButton(
                               textColor: Colors.grey,
-                              onPressed: () {},
+                              onPressed: () {
+                                
+                              },
                               child: Column(
                                 children: [
                                   LikeButton(size: 24),
@@ -154,7 +154,7 @@ class ViewDetail extends StatelessWidget {
                           textColor: Colors.grey,
                           onPressed: () {
                             Share.share(
-                                "嘿，我從【Taiwan GO GO】發現了想跟你分享的好地方：${view.Name}！ ${view.Descript}");
+                                "嘿，我從【Taiwan GO GO】發現了想跟你分享的好地方：${post.name}！ ${post.descript}");
                             // print("分享");
                           },
                           child: Column(

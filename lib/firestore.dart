@@ -1,7 +1,12 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:http/http.dart' as http;
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
+
+Map<String, dynamic> index;
 
 class Post {
   String id;
@@ -41,7 +46,7 @@ class Post {
     "其他"
   ];
 
-  Post(QueryDocumentSnapshot snapshot) {
+  Post(DocumentSnapshot snapshot) {
     id = snapshot.id;
     Map<String, dynamic> data = snapshot.data();
     name = data['Name'];
@@ -86,6 +91,33 @@ class Post {
       FirebaseFirestore.instance.collection("post").orderBy("Region").limit(5),
     );
   }
+
+  static Future<List<DocumentSnapshot>> getLike() async {
+    if(profile == null) await Profile.getProfile();
+    CollectionReference colRef = FirebaseFirestore.instance.collection("post");
+    List<DocumentSnapshot> result= [];
+    for(String id in profile.likes.toList()) {
+      result.add(await colRef.doc(id).get());
+    }
+    return result;
+  }
+
+  static Future<List<DocumentSnapshot>> search(String search) async {
+    if(index == null) {
+      index = jsonDecode(utf8.decode((await http.get("https://firebasestorage.googleapis.com/v0/b/taiwangogo-75be3.appspot.com/o/index.json?alt=media&token=a65e7498-5ab9-46c7-b976-0e4ad48a69c9")).bodyBytes));
+    }
+
+    CollectionReference colRef = FirebaseFirestore.instance.collection("post");
+
+    List<DocumentSnapshot> result= [];
+    for(String id in index.keys) {
+      if((index[id]["Name"] != null && index[id]["Name"].indexOf(search) != -1) || (index[id]["Region"] != null && index[id]["Region"].indexOf(search) != -1)) {
+        result.add(await colRef.doc(id).get());
+        if(result.length >= 10) break;
+      }
+    }
+    return result;
+  }
 }
 
 class MyStream {
@@ -117,14 +149,15 @@ class Profile {
   final String photoURL;
   Set likes;
   Profile(this.docRef, this.displayName, this.photoURL, this.likes) : super();
-  static Future<Profile> getProfile() async{
-    if(profile != null) {
+  static Future<Profile> getProfile() async {
+    if (profile != null) {
       return profile;
     }
     User currentUser = _auth.currentUser;
-    DocumentReference docRef = FirebaseFirestore.instance.collection("profile").doc(currentUser.uid);
+    DocumentReference docRef =
+        FirebaseFirestore.instance.collection("profile").doc(currentUser.uid);
     Map<String, dynamic> data = (await docRef.get()).data();
-    if(data == null) {
+    if (data == null) {
       data = {
         "displayName": currentUser.displayName,
         "photoURL": currentUser.photoURL,
@@ -132,29 +165,29 @@ class Profile {
       };
       docRef.set(data);
     }
-    
-    return Profile(docRef, data["displayName"], data["photoURL"], data["likes"].toSet());
+    profile = Profile(
+        docRef, data["displayName"], data["photoURL"], data["likes"].toSet());
+    return profile;
   }
+
   void like(String postId, int count) {
     likes.add(postId);
-    docRef.update({
-      "likes": likes.toList()
-    });
-    FirebaseFirestore.instance.collection("post").doc(postId).update({
-      "like": count
-    });
+    docRef.update({"likes": likes.toList()});
+    FirebaseFirestore.instance
+        .collection("post")
+        .doc(postId)
+        .update({"like": count});
   }
+
   void dislike(String postId, int count) {
     likes.remove(postId);
-    docRef.update({
-      "likes": likes.toList()
-    });
-    FirebaseFirestore.instance.collection("post").doc(postId).update({
-      "like": count
-    });
+    docRef.update({"likes": likes.toList()});
+    FirebaseFirestore.instance
+        .collection("post")
+        .doc(postId)
+        .update({"like": count});
   }
 }
-
 
 // class LikeList {
 //   Set<String> likes;

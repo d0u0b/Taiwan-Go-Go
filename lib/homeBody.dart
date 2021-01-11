@@ -44,9 +44,9 @@ class _HomeBodyState extends State<HomeBody> {
             SlideInDown(
               child: HomePage(),
             ),
-            SlideInDown(
-              child: Album(),
-            ),
+            // SlideInDown(
+            //   child: Album(),
+            // ),
             SlideInDown(
               child: SearchPage(),
             ),
@@ -72,12 +72,12 @@ class _HomeBodyState extends State<HomeBody> {
               activeColor: Colors.blueAccent[100],
               inactiveColor: Colors.blue[200],
               textAlign: TextAlign.center),
-          BottomNavyBarItem(
-              title: Text('相簿'),
-              icon: Icon(Icons.photo_album),
-              activeColor: Colors.blueAccent[100],
-              inactiveColor: Colors.blue[200],
-              textAlign: TextAlign.center),
+          // BottomNavyBarItem(
+          //     title: Text('相簿'),
+          //     icon: Icon(Icons.photo_album),
+          //     activeColor: Colors.blueAccent[100],
+          //     inactiveColor: Colors.blue[200],
+          //     textAlign: TextAlign.center),
           BottomNavyBarItem(
               title: Text('搜尋景點'),
               icon: Icon(Icons.search),
